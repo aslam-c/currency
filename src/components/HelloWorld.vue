@@ -1,5 +1,5 @@
 <template>
-
+    <strong>Hello world component tweaked</strong>
 </template>
 <script>
 export default {
