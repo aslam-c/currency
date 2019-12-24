@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">Select Country</div>
             <div class="card-body">
-                <input type="text" name="country" placeholder="Search for country. . ." v-model='q_country' class="form-control" @keyup.enter='getCountry'>
+                <input type="text" name="country" placeholder="Search for country. . ." v-model='q_country' class="form-control" @keyup.enter='getCountry' autocomplete="off">
                 <small class="text-danger float-left" v-if='error'>{{error}}</small>
                 <br><strong>Matching Countries:</strong>
                 <ul class="list-group">
@@ -33,15 +33,19 @@ export default {
             this.error=''
 
             this.$axios.get('https://restcountries.eu/rest/v2/name/'+this.q_country)
-            .then(resp=>{this.country_list=resp.data})
+            .then(resp=>{this.country_list=resp.data
+                this.error=''
+            })
             .catch(err=>{
+                try{
                 if(err.response.data){
                     this.error=err.response.data.message
-                    return
+                    
+                    return;
                 }
-                else
-                {
-                this.error='Check your network connectivity'
+                }
+                catch(e){
+                    this.error='Check your network connectivity'
                 }
             })    
        }
