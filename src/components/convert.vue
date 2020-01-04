@@ -1,39 +1,67 @@
 <template>
-<div class="container">
-    <div class="card">  
-    <div class="card-header">Converting from 
-        <span class="text-success">{{this.$route.params.currency_code}}</span>
-        to<span class="text-success"> INR</span> 
-    </div>      
-    <div class='card-body'>
-        <span class="" v-if='loading'> Fetching current rate...</span>
-        <span v-else>1 {{src_currency}} equals
-        <h2>{{rate}} INR</h2></span>       
-        
+  <div class="container m-1" v-if="currency">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="text-success">{{currency}}</h1>Converting to
+        <span class="text-success">INR</span>
+      </div>
+      <div class="card-body">
+        <span class v-if="loading">Fetching currency rate...</span>
+        <span v-if="!loading">{{info}}</span>
+        <span class="text-danger" v-if="error">
+          {{error}}
+          <br />
+          <button class="btn btn-sm btn-primary" @click="convert">Retry</button>
+        </span>
+      </div>
     </div>
-    </div>
-</div>
+  </div>
 </template>
 
 <script>
 export default {
-data(){
-        return {src_currency:this.$route.params.currency_code,
-        rate:0,
-        loading:false
-        }
-
-},
-created(){
-    this.loading=true
-    this.$axios.get('https://free.currconv.com/api/v7/convert?q='+this.src_currency+'_INR&apiKey=6a14acdb221dfbd55fe5&compact=ultra')
-    .then(resp=>{this.rate=resp.data[this.src_currency+'_INR']
-    this.loading=false
-        
-    })
-   .catch(err=>{this.rate=''
-    this.loading=false
-   })
-}    
-}
+  props: ["currency"],
+  data() {
+    return {
+      rate: 0,
+      info: "",
+      loading: false,
+      error: ""
+    };
+  },
+  methods: {
+    convert() {
+      this.loading = true;
+      this.error = "";
+      this.info = "";
+      this.$axios
+        .post(
+          this.API_URL + "convert",
+          { from: this.currency },
+          {
+            headers: {
+              authorization: this.jwt
+            }
+          }
+        )
+        .then(resp => {
+          this.rate = resp.data.rate[this.currency + "_INR"];
+          this.info = `1 ${this.currency} equals ${this.rate} INR`;
+          this.loading = false;
+          this.error = "";
+        })
+        .catch(err => {
+          this.rate = "";
+          this.loading = false;
+          this.error = "Exchange rate cant be fetched";
+          this.info = "";
+        });
+    }
+  },
+  watch: {
+    currency: function(newval, oldval) {
+      this.convert();
+    }
+  }
+};
 </script>
