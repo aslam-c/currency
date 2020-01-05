@@ -23,6 +23,7 @@
           <span class="float-left m-1 text-danger" v-if="error">{{error}}</span>
         </div>
       </div>
+      <router-link to="register">I dont have an account</router-link>
     </div>
   </div>
 </template>
@@ -52,7 +53,6 @@ export default {
         .then(resp => {
           this.logging = false;
           let jwt = resp.data.jwt;
-          alert(jwt);
           localStorage.setItem("jwt", JSON.stringify(jwt));
 
           //push him to root

@@ -15,17 +15,20 @@ export default new Router({
     {
       path: "/",
       name: "HelloWorld",
-      component: HelloWorld
+      component: HelloWorld,
+      meta: { auth: true }
     },
     {
       path: "/register",
       name: "register",
-      component: register
+      component: register,
+      meta: { auth: false }
     },
     {
       path: "/login",
       name: "login",
-      component: login
+      component: login,
+      meta: { auth: false }
     },
     {
       path: "*",

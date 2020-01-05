@@ -27,6 +27,7 @@
           <span class="float-left m-1 text-danger" v-if="error">{{error}}</span>
         </div>
       </div>
+      <router-link to="login">I already have an account</router-link>
     </div>
   </div>
 </template>
@@ -60,7 +61,7 @@ export default {
             name: "login",
             params: {
               greet: "Enter your Username and password"
-            } 
+            }
           });
         })
         .catch(err => {
