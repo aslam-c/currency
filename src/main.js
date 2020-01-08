@@ -11,7 +11,6 @@ Vue.prototype.$axios = axios.create({});
 
 const jwt = JSON.parse(localStorage.getItem("jwt")) || "";
 const API_URL = "http://resell.walknow.xyz/api/";
-// const API_URL = "http://localhost:8000/api/";
 
 Vue.prototype.API_URL = API_URL;
 Vue.prototype.jwt = jwt;
