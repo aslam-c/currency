@@ -9,15 +9,29 @@
           <input
             type="email"
             placeholder="email address"
-            v-model="auth.email"
+            v-model="$v.auth.email.$model"
             class="form-control form-control-sm m-1"
           />
+          <span v-if="$v.auth.email.$dirty">
+            <span
+              class="badge badge-danger float-right m-1"
+              v-if="!$v.auth.email.required||!$v.auth.email.email"
+            >We need a valid email !</span>
+          </span>
+
           <input
             type="password"
             placeholder="*******"
-            v-model="auth.password"
+            v-model="$v.auth.password.$model"
             class="form-control form-control-sm m-1"
           />
+          <span v-if="$v.auth.password.$dirty">
+            <span
+              class="badge badge-danger float-right m-1"
+              v-if="!$v.auth.password.required"
+            >We also need your secret !</span>
+          </span>
+
           <button class="btn btn-sm btn-primary m-1 float-left" @click="try_signin">Login</button>
           <span class="float-left m-1 text-muted" v-if="logging">Please wait...</span>
           <span class="float-left m-1 text-danger" v-if="error">{{error}}</span>
@@ -29,7 +43,8 @@
 </template>
 
 <script>
-import HelloWorldVue from "./HelloWorld.vue";
+// import HelloWorldVue from "./HelloWorld.vue";
+import { required, email } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
@@ -38,11 +53,23 @@ export default {
       auth: {
         email: "",
         password: ""
+      },
+      errors: {
+        email: "",
+        password: ""
       }
     };
   },
+  validations: {
+    auth: {
+      email: { required, email },
+      password: { required }
+    }
+  },
   methods: {
     try_signin() {
+      this.errors.email = "";
+      this.errors.password = "";
       this.error = "";
       this.logging = true;
       this.$axios
@@ -62,7 +89,10 @@ export default {
           this.logging = false;
           try {
             if (err.response.data) {
-              this.error = err.response.data.errors;
+              let data = err.response.data;
+              // this.error = data.errors;
+              this.errors.password = data.errors.password[0];
+              this.errors.email = data.errors.email[0];
             }
           } catch (err) {
             this.error = "Please check your network connection";

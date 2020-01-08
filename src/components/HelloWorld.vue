@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div class="card">
-      <div class="card-header">Select Country</div>
+      <div class="card-header">
+        Select Country
+        <a class="float-right" @click.prevent="logout" href="#">Logout</a>
+      </div>
       <div class="card-body">
         <input
           type="text"
@@ -83,6 +86,9 @@ export default {
           }
           this.loading = false;
         });
+    },
+    logout() {
+      localStorage.removeItem("jwt");
     }
   }
 };

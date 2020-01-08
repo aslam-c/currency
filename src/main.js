@@ -5,15 +5,18 @@ import App from "./App";
 import router from "./router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import Vuelidate from "vuelidate";
 
 Vue.prototype.$axios = axios.create({});
 
 const jwt = JSON.parse(localStorage.getItem("jwt")) || "";
-const API_URL = "http://localhost:8000/api/";
+const API_URL = "http://resell.walknow.xyz/api/";
+// const API_URL = "http://localhost:8000/api/";
 
 Vue.prototype.API_URL = API_URL;
 Vue.prototype.jwt = jwt;
 
+Vue.use(Vuelidate);
 Vue.config.productionTip = false;
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
